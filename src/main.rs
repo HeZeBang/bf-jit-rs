@@ -1,13 +1,16 @@
+use std::io::Read;
+use std::fs::File;
+
 pub mod interpreter;
 
-
-
 fn main() {
-    let prog = String::from("+[.+]"); // Print Ascii 1~255
-    // let prog = String::from(",[.,]"); // Cat
-
-    println!("Running bf program: {}", prog);
-    let prog = prog.as_bytes().to_vec();
+    let filename = "bf/helloworld.bf";
+    println!("Running bf program: {}", filename);
+    let prog = File::open(filename)
+        .expect("Failed to open file")
+        .bytes()
+        .filter_map(Result::ok)
+        .collect::<Vec<u8>>();
     let result = interpreter::interp::run(&prog);
     match result {
         Ok(_) => println!("\nProgram executed successfully"),
